@@ -1,3 +1,5 @@
+cargo-features = ["edition2024"]
+
 [package]
 name = "dotsync"
 version = "0.1.0"
@@ -9,6 +11,7 @@ toml = "*"
 clap = { version = "*", features = ["derive"] }
 chrono = "*"
 tokio = { version = "*", features = ["full"] }
+log = "*"
 
 [dev-dependencies]
 assert_cmd = "*"
