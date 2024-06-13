@@ -1,46 +1,22 @@
-use std::collections::HashMap;
+// src/config/loader.rs
+use crate::config::types::Config;
+use crate::constants::CONFIG_FILE;
+use serde_json;
 use std::fs;
-use crate::config::types::{Profile, Config, GlobalConfig};
-// use crate::constants::CONFIG_FILE;
+use std::error::Error;
 
-pub fn load(path: &str) -> Result<Config, Box<dyn std::error::Error>> {
-    if !exists(path) {
-        let default_config = default();
-        save(&default_config, path)?;
-    }
-    let contents = fs::read_to_string(path)?;
-    let config: Config = toml::from_str(&contents)?;
+pub fn load(path: &str) -> Result<Config, Box<dyn Error>> {
+    let content = fs::read_to_string(path)?;
+    let config: Config = serde_json::from_str(&content)?;
     Ok(config)
 }
 
-pub fn save(config: &Config, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let contents = toml::to_string(config)?;
-    fs::write(path, contents)?;
+pub fn save(config: &Config, path: &str) -> Result<(), Box<dyn Error>> {
+    let content = serde_json::to_string_pretty(config)?;
+    fs::write(path, content)?;
     Ok(())
 }
 
-pub fn exists(path: &str) -> bool {
-    fs::metadata(path).is_ok()
-}
-
-pub fn default() -> Config {
-    let mut profiles = HashMap::new();
-    profiles.insert(
-        "personal".to_string(),
-        Profile {
-            dotfiles: {
-                let mut map = HashMap::new();
-                map.insert("/path/to/source/.bashrc".to_string(), "/path/to/destination/.bashrc".to_string());
-                map.insert("/path/to/source/.vimrc".to_string(), "/path/to/destination/.vimrc".to_string());
-                map
-            },
-        },
-    );
-
-    Config {
-        profiles: HashMap::new(),
-        global: GlobalConfig {
-            default_profile: String::from("personal"),
-        },
-    }
+pub fn exists() -> bool {
+    fs::metadata(CONFIG_FILE).is_ok()
 }

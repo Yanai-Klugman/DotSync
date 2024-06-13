@@ -1,56 +1,49 @@
-use clap::{Command, Arg, ArgAction};
-use crate::commands::{sync::sync_command, profile::{create_profile, list_profiles, switch_profile}};
-use crate::constants::{APP_NAME, APP_VERSION, APP_AUTHOR, APP_ABOUT, SUBCOMMAND_SYNC, DESC_SYNC, ARG_PROFILE, ARG_DRY_RUN, SUBCOMMAND_CREATE_PROFILE, DESC_CREATE_PROFILE, SUBCOMMAND_LIST_PROFILES, DESC_LIST_PROFILES, SUBCOMMAND_SWITCH_PROFILE, DESC_SWITCH_PROFILE};
-
-mod commands;
-mod config;
-mod constants;
-mod utils;
+// src/main.rs
+use clap::{Arg, Command};
+use dotsync::commands::{profile, sync};
+use dotsync::constants;
 
 fn main() {
-    let matches = Command::new(APP_NAME)
-        .version(APP_VERSION)
-        .author(APP_AUTHOR)
-        .about(APP_ABOUT)
+    let matches = Command::new(constants::APP_NAME)
+        .version(constants::APP_VERSION)
+        .author(constants::APP_AUTHOR)
+        .about(constants::APP_ABOUT)
         .subcommand(
-            Command::new(SUBCOMMAND_SYNC)
-                .about(DESC_SYNC)
-                .arg(Arg::new(ARG_PROFILE).required(true).default_value("personal"))
-                .arg(Arg::new(ARG_DRY_RUN).long(ARG_DRY_RUN).action(ArgAction::SetTrue)),
+            Command::new(constants::SUBCOMMAND_SYNC)
+                .about(constants::DESC_SYNC)
+                .arg(Arg::new(constants::ARG_PROFILE).required(true).default_value("personal"))
+                .arg(Arg::new(constants::ARG_DRY_RUN).long(constants::ARG_DRY_RUN).action(clap::ArgAction::SetTrue)),
         )
         .subcommand(
-            Command::new(SUBCOMMAND_CREATE_PROFILE)
-                .about(DESC_CREATE_PROFILE)
-                .arg(Arg::new(ARG_PROFILE).required(true)),
+            Command::new(constants::SUBCOMMAND_CREATE_PROFILE)
+                .about(constants::DESC_CREATE_PROFILE)
+                .arg(Arg::new(constants::ARG_PROFILE).required(true)),
         )
+        .subcommand(Command::new(constants::SUBCOMMAND_LIST_PROFILES).about(constants::DESC_LIST_PROFILES))
         .subcommand(
-            Command::new(SUBCOMMAND_LIST_PROFILES)
-                .about(DESC_LIST_PROFILES),
-        )
-        .subcommand(
-            Command::new(SUBCOMMAND_SWITCH_PROFILE)
-                .about(DESC_SWITCH_PROFILE)
-                .arg(Arg::new(ARG_PROFILE).required(true)),
+            Command::new(constants::SUBCOMMAND_SWITCH_PROFILE)
+                .about(constants::DESC_SWITCH_PROFILE)
+                .arg(Arg::new(constants::ARG_PROFILE).required(true)),
         )
         .get_matches();
 
     match matches.subcommand() {
-        Some((SUBCOMMAND_SYNC, sync_matches)) => {
-            let profile = sync_matches.get_one::<String>(ARG_PROFILE).unwrap();
-            let dry_run = sync_matches.get_flag(ARG_DRY_RUN);
-            sync_command(profile, dry_run);
+        Some((constants::SUBCOMMAND_SYNC, sync_matches)) => {
+            let profile = sync_matches.get_one::<String>(constants::ARG_PROFILE).unwrap();
+            let dry_run = sync_matches.get_flag(constants::ARG_DRY_RUN);
+            sync::sync_command(profile, dry_run);
         }
-        Some((SUBCOMMAND_CREATE_PROFILE, profile_matches)) => {
-            let profile = profile_matches.get_one::<String>(ARG_PROFILE).unwrap();
-            create_profile(profile);
+        Some((constants::SUBCOMMAND_CREATE_PROFILE, create_matches)) => {
+            let profile = create_matches.get_one::<String>(constants::ARG_PROFILE).unwrap();
+            profile::create_profile(profile);
         }
-        Some((SUBCOMMAND_LIST_PROFILES, _)) => {
-            list_profiles();
+        Some((constants::SUBCOMMAND_LIST_PROFILES, _)) => {
+            profile::list_profiles();
         }
-        Some((SUBCOMMAND_SWITCH_PROFILE, profile_matches)) => {
-            let profile = profile_matches.get_one::<String>(ARG_PROFILE).unwrap();
-            switch_profile(profile);
+        Some((constants::SUBCOMMAND_SWITCH_PROFILE, switch_matches)) => {
+            let profile = switch_matches.get_one::<String>(constants::ARG_PROFILE).unwrap();
+            profile::switch_profile(profile);
         }
-        _ => eprintln!("Unknown command"),
+        _ => {}
     }
 }

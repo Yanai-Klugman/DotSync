@@ -6,17 +6,24 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+serde_json = "*"
 serde = { version = "*", features = ["derive"] }
 toml = "*"
 clap = { version = "*", features = ["derive"] }
 chrono = "*"
 tokio = { version = "*", features = ["full"] }
 log = "*"
+env_logger = "*"
 
 [dev-dependencies]
 assert_cmd = "*"
 criterion = "*"
 cargo-audit = "*"
+tempfile = "*"
+
+[lib]
+name = "dotsync"
+path = "src/lib.rs"
 
 [package.metadata]
 description = "A CLI tool for managing and synchronizing dotfiles"
