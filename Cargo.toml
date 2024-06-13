@@ -1,6 +1,22 @@
 [package]
 name = "dotsync"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
+serde = { version = "*", features = ["derive"] }
+toml = "*"
+clap = { version = "*", features = ["derive"] }
+chrono = "*"
+tokio = { version = "*", features = ["full"] }
+
+[dev-dependencies]
+assert_cmd = "*"
+criterion = "*"
+cargo-audit = "*"
+
+[package.metadata]
+description = "A CLI tool for managing and synchronizing dotfiles"
+repository = "https://github.com/Yanai-Klugman/dotsync"
+homepage = "https://github.com/Yanai-Klugman/dotsync"
+documentation = "https://github.com/Yanai-Klugman/dotsync"
