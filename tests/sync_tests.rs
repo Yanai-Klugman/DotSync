@@ -1,28 +1,21 @@
 use std::fs;
 use mktemp::Temp;
+use dotsync::commands::sync::sync_dotfile;
 
-#[cfg(test)]
-mod sync_tests {
-    use super::*;
+#[test]
+fn test_sync_dotfile() {
+    let src_file = Temp::new_file().unwrap();
+    let dest_file = Temp::new_file().unwrap();
 
-    #[test]
-    fn test_sync_dotfile() {
-        // Create temporary source and destination files
-        let src_file = Temp::new_file().unwrap();
-        let dest_file = Temp::new_file().unwrap();
+    // Write something to the source file
+    fs::write(&src_file, "test content").unwrap();
 
-        // Write some content to the source file
-        let src_path = src_file.to_path_buf();
-        fs::write(&src_path, "test content").unwrap();
+    // Sync the dotfile
+    sync_dotfile(src_file.to_path_buf().as_path(), dest_file.to_path_buf().as_path()).unwrap();
 
-        // The destination file path
-        let dest_path = dest_file.to_path_buf();
+    // Read the destination file content
+    let content = fs::read_to_string(dest_file.to_path_buf().as_path()).unwrap();
 
-        // Call the sync_dotfile function
-        dotsync::commands::sync::sync_dotfile(&src_path, &dest_path).unwrap();
-
-        // Verify the content has been copied
-        let dest_content = fs::read_to_string(&dest_path).unwrap();
-        assert_eq!(dest_content, "test content");
-    }
+    // Assert the content is "test content"
+    assert_eq!(content, "test content");
 }

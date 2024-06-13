@@ -4,6 +4,7 @@ use crate::config::types::Profile;
 use crate::constants;
 use std::fs;
 
+
 pub fn create_profile(profile_name: &str) {
     let mut config = loader::load(constants::CONFIG_FILE).unwrap_or_default();
     config.profiles.insert(profile_name.to_string(), Profile::default());
