@@ -1,23 +1,28 @@
-// tests/sync_tests.rs
-use tempfile::NamedTempFile;
-use std::io::Write;
 use std::fs;
+use mktemp::Temp;
 
-#[test]
-fn test_sync_dotfile() {
-    // Create a temporary source file
-    let mut src_file = NamedTempFile::new().unwrap();
-    writeln!(src_file, "Hello, world!").unwrap();
-    let src_path = src_file.path().to_str().unwrap().to_string();
+#[cfg(test)]
+mod sync_tests {
+    use super::*;
 
-    // Create a temporary destination path
-    let dest_file = NamedTempFile::new().unwrap();
-    let dest_path = dest_file.path().to_str().unwrap().to_string();
+    #[test]
+    fn test_sync_dotfile() {
+        // Create temporary source and destination files
+        let src_file = Temp::new_file().unwrap();
+        let dest_file = Temp::new_file().unwrap();
 
-    // Call the function to be tested
-    dotsync::commands::sync::sync_dotfile(&src_path, &dest_path).unwrap();
+        // Write some content to the source file
+        let src_path = src_file.to_path_buf();
+        fs::write(&src_path, "test content").unwrap();
 
-    // Verify the contents of the destination file
-    let dest_contents = fs::read_to_string(dest_path).unwrap();
-    assert_eq!(dest_contents, "Hello, world!\n");
+        // The destination file path
+        let dest_path = dest_file.to_path_buf();
+
+        // Call the sync_dotfile function
+        dotsync::commands::sync::sync_dotfile(&src_path, &dest_path).unwrap();
+
+        // Verify the content has been copied
+        let dest_content = fs::read_to_string(&dest_path).unwrap();
+        assert_eq!(dest_content, "test content");
+    }
 }

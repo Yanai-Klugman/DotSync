@@ -1,9 +1,7 @@
-// src/commands/sync.rs
 use crate::config::loader;
 use crate::constants;
 use std::fs;
 use std::path::Path;
-use std::error::Error;
 
 pub fn sync_command(profile_name: &str, dry_run: bool) {
     let config = loader::load(constants::CONFIG_FILE).unwrap_or_default();
@@ -12,16 +10,12 @@ pub fn sync_command(profile_name: &str, dry_run: bool) {
         if dry_run {
             println!("Would sync: {} -> {}", dotfile.source, dotfile.destination);
         } else {
-            let _ = sync_dotfile(&dotfile.source, &dotfile.destination);
+            sync_dotfile(Path::new(&dotfile.source), Path::new(&dotfile.destination)).unwrap();
         }
     }
 }
 
-pub fn sync_dotfile(src: &str, dest: &str) -> Result<(), Box<dyn Error>> {
-    if Path::new(src).exists() {
-        fs::copy(src, dest)?;
-        Ok(())
-    } else {
-        Err(format!("Source file {} does not exist", src).into())
-    }
+pub fn sync_dotfile(src: &Path, dest: &Path) -> Result<(), std::io::Error> {
+    fs::copy(src, dest)?;
+    Ok(())
 }

@@ -19,7 +19,7 @@ env_logger = "*"
 assert_cmd = "*"
 criterion = "*"
 cargo-audit = "*"
-tempfile = "*"
+mktemp = "*"
 
 [lib]
 name = "dotsync"
