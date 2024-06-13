@@ -1,33 +1,31 @@
-use clap::{Arg, Command};
-use tokio::main;
-
 mod commands;
 mod config;
-mod utils;
 mod constants;
+mod utils;
 
-#[main]
-async fn main() {
-    utils::logging::init_logging().unwrap();
+use clap::{Arg, Command};
+use commands::sync::sync_command;
+use constants::*;
 
-    let matches = Command::new(constants::APP_NAME)
-        .version(constants::APP_VERSION)
-        .author(constants::APP_AUTHOR)
-        .about(constants::APP_ABOUT)
+fn main() {
+    let matches = Command::new(APP_NAME)
+        .version(APP_VERSION)
+        .author(APP_AUTHOR)
+        .about(APP_ABOUT)
         .subcommand(
-            Command::new(constants::SUBCOMMAND_SYNC)
-                .about(constants::DESC_SYNC)
-                .arg(Arg::new(constants::ARG_PROFILE).required(true).default_value("personal"))
-                .arg(Arg::new(constants::ARG_DRY_RUN).long(constants::ARG_DRY_RUN).action(clap::ArgAction::SetTrue)),
+            Command::new(SUBCOMMAND_SYNC)
+                .about(DESC_SYNC)
+                .arg(Arg::new(ARG_PROFILE).required(true).default_value("personal"))
+                .arg(Arg::new(ARG_DRY_RUN).long(ARG_DRY_RUN).action(clap::ArgAction::SetTrue)),
         )
         .get_matches();
 
     match matches.subcommand() {
-        Some((constants::SUBCOMMAND_SYNC, sync_matches)) => {
-            let profile = sync_matches.get_one::<String>(constants::ARG_PROFILE).unwrap();
-            let dry_run = sync_matches.get_flag(constants::ARG_DRY_RUN);
-            commands::sync::sync(profile, dry_run).await.unwrap();
+        Some((SUBCOMMAND_SYNC, sync_matches)) => {
+            let profile = sync_matches.get_one::<String>(ARG_PROFILE).unwrap();
+            let dry_run = sync_matches.get_flag(ARG_DRY_RUN);
+            sync_command(profile, dry_run);
         }
-        _ => {}
+        _ => eprintln!("No valid subcommand was used"),
     }
 }
