@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::fs;
-use crate::config::types::{Config, GlobalConfig};
+use crate::config::types::{Profile, Config, GlobalConfig};
 // use crate::constants::CONFIG_FILE;
 
 pub fn load(path: &str) -> Result<Config, Box<dyn std::error::Error>> {
@@ -24,6 +24,19 @@ pub fn exists(path: &str) -> bool {
 }
 
 pub fn default() -> Config {
+    let mut profiles = HashMap::new();
+    profiles.insert(
+        "personal".to_string(),
+        Profile {
+            dotfiles: {
+                let mut map = HashMap::new();
+                map.insert("/path/to/source/.bashrc".to_string(), "/path/to/destination/.bashrc".to_string());
+                map.insert("/path/to/source/.vimrc".to_string(), "/path/to/destination/.vimrc".to_string());
+                map
+            },
+        },
+    );
+
     Config {
         profiles: HashMap::new(),
         global: GlobalConfig {
