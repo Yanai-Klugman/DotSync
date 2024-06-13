@@ -1,0 +1,4 @@
+[profiles.work.dotfiles]
+
+[global]
+default_profile = "personal"

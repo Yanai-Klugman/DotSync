@@ -1,30 +1,18 @@
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Dotfile {
-    pub source: String,
-    pub destination: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Profile {
-    pub dotfiles: Vec<Dotfile>,
-    pub dependencies: Vec<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Profiles {
-    pub profiles: HashMap<String, Profile>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct GlobalConfig {
-    pub dependencies: Vec<String>,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug, Deserialize, Serialize, Default)]
 pub struct Config {
-    pub global: GlobalConfig,
     pub profiles: HashMap<String, Profile>,
+    pub global: GlobalConfig,
+}
+
+#[derive(Debug, Deserialize, Serialize, Default)]
+pub struct Profile {
+    pub dotfiles: HashMap<String, String>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Default)]
+pub struct GlobalConfig {
+    pub default_profile: String,
 }
