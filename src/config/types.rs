@@ -1,18 +1,17 @@
-// src/config/types.rs
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, Clone)]
 pub struct Config {
     pub profiles: HashMap<String, Profile>,
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Debug, Deserialize, Serialize, Default, Clone)]
 pub struct Profile {
-    pub dotfiles: Vec<Dotfile>,
+    pub dotfiles: HashMap<String, String>,
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Debug)]
 pub struct Dotfile {
     pub source: String,
     pub destination: String,

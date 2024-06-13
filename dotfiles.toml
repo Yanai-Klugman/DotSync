@@ -1,6 +1,0 @@
-
-[profiles.work]
-dotfiles = { "/path/to/source/.bashrc" = "/path/to/destination/.bashrc", "/path/to/source/.vimrc" = "/path/to/destination/.vimrc" }
-
-[global]
-default_profile = "personal"

@@ -1,8 +1,8 @@
-pub const CONFIG_FILE: &str = "dotfiles.toml";
-
-pub const APP_NAME: &str = "DotSync";
+pub const CONFIG_DIR: &str = ".dotsync";
+pub const CONFIG_FILE: &str = ".dotsync/dotfiles.toml";
+pub const APP_NAME: &str = "dotsync";
 pub const APP_VERSION: &str = "0.1.0";
-pub const APP_AUTHOR: &str = "Your Name <youremail@example.com>";
+pub const APP_AUTHOR: &str = "Yanai Klugman <yanaiklugman@gmail.com>";
 pub const APP_ABOUT: &str = "A CLI tool to manage dotfiles declaratively across various environments.";
 
 pub const SUBCOMMAND_SETUP: &str = "setup";

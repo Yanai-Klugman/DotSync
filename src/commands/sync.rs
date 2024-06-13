@@ -1,20 +1,22 @@
 use crate::config::loader;
 use crate::constants;
+use log::info;
+use std::error::Error;
 use std::fs;
 use std::path::Path;
 
-
-
-pub fn sync_command(profile_name: &str, dry_run: bool) {
-    let config = loader::load(constants::CONFIG_FILE).unwrap_or_default();
-    let profile = config.profiles.get(profile_name).unwrap();
-    for dotfile in &profile.dotfiles {
+pub fn sync_command(profile_name: &str, dry_run: bool) -> Result<(), Box<dyn Error>> {
+    let config = loader::load(Path::new(constants::CONFIG_FILE))?;
+    let profile = config.profiles.get(profile_name)
+        .ok_or_else(|| format!("Profile '{}' not found in configuration", profile_name))?;
+    for (source, destination) in &profile.dotfiles {
         if dry_run {
-            println!("Would sync: {} -> {}", dotfile.source, dotfile.destination);
+            info!("Would sync: {} -> {}", source, destination);
         } else {
-            sync_dotfile(Path::new(&dotfile.source), Path::new(&dotfile.destination)).unwrap();
+            sync_dotfile(Path::new(source), Path::new(destination))?;
         }
     }
+    Ok(())
 }
 
 pub fn sync_dotfile(src: &Path, dest: &Path) -> Result<(), std::io::Error> {

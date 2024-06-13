@@ -1,0 +1,11 @@
+[profiles.work.dotfiles]
+"/home/yanai/Projects/dotsync/tests/source/.bashrc" = "/home/yanai/Projects/dotsync/tests/destination/.bashrc"
+"/home/yanai/Projects/dotsync/tests/source/.vimrc" = "/home/yanai/Projects/dotsync/tests/destination/.vimrc"
+
+[profiles.default.dotfiles]
+"/home/yanai/Projects/dotsync/tests/source/.bashrc" = "/home/yanai/Projects/dotsync/tests/destination/.bashrc"
+"/home/yanai/Projects/dotsync/tests/source/.vimrc" = "/home/yanai/Projects/dotsync/tests/destination/.vimrc"
+
+[profiles.personal.dotfiles]
+"/home/yanai/Projects/dotsync/tests/source/.bashrc" = "/home/yanai/Projects/dotsync/tests/destination/.bashrc"
+"/home/yanai/Projects/dotsync/tests/source/.vimrc" = "/home/yanai/Projects/dotsync/tests/destination/.vimrc"
